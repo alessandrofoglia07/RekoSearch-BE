@@ -1,0 +1,6 @@
+helloWorld:
+    handler: src/functions/helloWorld.handler
+    event:
+        - httpApi:
+              path: /
+              method: get

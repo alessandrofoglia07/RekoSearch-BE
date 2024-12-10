@@ -1,0 +1,34 @@
+service: QuillStream-serverless
+frameworkVersion: '4'
+
+provider:
+    name: aws
+    runtime: nodejs20.x
+    region: us-west-1
+    httpApi:
+        cors:
+            allowedOrigins:
+                - ${env:CLIENT_URL}
+            allowCredentials: true
+    environment:
+        SERVERLESS_AWS_REGION:
+            Ref: AWS::Region
+        CORS_ORIGIN: ${self:custom.corsOrigin} # CHANGE THIS LATER
+        CLIENT_URL: ${env:CLIENT_URL}
+
+package:
+    individually: true
+    patterns:
+        - '!node_modules/*'
+
+functions: ${file(./serverless-functions.yml)}
+
+resources:
+    Resources: ${file(./serverless-dynamodbTables.yml)}
+
+plugins:
+    - serverless-iam-roles-per-function
+
+custom:
+    corsOrigin: '*'
+    dynamodbTableUrl: "arn:aws:dynamodb:${opt:region, self:provider.region}:${aws:accountId, '*'}:table"
