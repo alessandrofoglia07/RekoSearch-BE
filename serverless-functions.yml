@@ -1,6 +1,16 @@
-helloWorld:
-    handler: src/functions/helloWorld.handler
+uploadImage:
+    handler: src/functions/uploadImage.handler
     event:
         - httpApi:
-              path: /
-              method: get
+              path: /image
+              method: post
+              authorizer:
+                  name: jwtCognitoAuthorizer
+deleteImage:
+    handler: src/functions/deleteImage.handler
+    event:
+        - httpApi:
+              path: /image
+              method: delete
+              authorizer:
+                  name: jwtCognitoAuthorizer
