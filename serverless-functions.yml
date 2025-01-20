@@ -14,3 +14,9 @@ deleteImage:
               method: delete
               authorizer:
                   name: jwtCognitoAuthorizer
+getImages:
+    handler: src/functions/getImages.handler
+    event:
+        - httpApi:
+              path: /images
+              method: get
