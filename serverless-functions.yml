@@ -1,8 +1,8 @@
-uploadImage:
-    handler: src/functions/uploadImage.handler
+uploadPresignedUrl:
+    handler: src/functions/uploadPresignedUrl.handler
     event:
         - httpApi:
-              path: /image
+              path: /upload-url
               method: post
               authorizer:
                   name: jwtCognitoAuthorizer
