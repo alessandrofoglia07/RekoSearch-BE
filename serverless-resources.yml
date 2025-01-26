@@ -10,7 +10,7 @@ ImagesBucket:
         CorsConfiguration:
             CorsRules:
                 - AllowedOrigins:
-                      - '*' # TODO: restrict this
+                      - ${env:CLIENT_URL}
                   AllowedMethods:
                       - GET
                       - PUT

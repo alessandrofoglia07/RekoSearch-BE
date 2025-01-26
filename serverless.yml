@@ -13,7 +13,6 @@ provider:
     environment:
         SERVERLESS_AWS_REGION:
             Ref: AWS::Region
-        CORS_ORIGIN: ${self:custom.corsOrigin} # CHANGE THIS LATER
         CLIENT_URL: ${env:CLIENT_URL}
 
 package:
@@ -30,6 +29,5 @@ plugins:
     - serverless-iam-roles-per-function
 
 custom:
-    corsOrigin: '*'
     dynamodbTableUrl: "arn:aws:dynamodb:${opt:region, self:provider.region}:${aws:accountId, '*'}:table"
     s3ImagesBucket: rekosearch-images-${sls:stage}
