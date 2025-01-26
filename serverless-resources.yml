@@ -1,0 +1,23 @@
+ImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+        BucketName: ${self:custom.s3ImagesBucket}
+        PublicAccessBlockConfiguration:
+            BlockPublicAcls: true
+            BlockPublicPolicy: true
+            IgnorePublicAcls: true
+            RestrictPublicBuckets: true
+        CorsConfiguration:
+            CorsRules:
+                - AllowedOrigins:
+                      - '*' # TODO: restrict this
+                  AllowedMethods:
+                      - GET
+                      - PUT
+                      - POST
+                      - DELETE
+                  AllowedHeaders:
+                      - '*'
+                  ExposedHeaders:
+                      - ETag
+                  MaxAge: 3000

@@ -24,7 +24,7 @@ package:
 functions: ${file(./serverless-functions.yml)}
 
 resources:
-    Resources: ${file(./serverless-dynamodbTables.yml)}
+    Resources: ${file(./serverless-resources.yml)}
 
 plugins:
     - serverless-iam-roles-per-function
@@ -32,3 +32,4 @@ plugins:
 custom:
     corsOrigin: '*'
     dynamodbTableUrl: "arn:aws:dynamodb:${opt:region, self:provider.region}:${aws:accountId, '*'}:table"
+    s3ImagesBucket: rekosearch-images-${sls:stage}
