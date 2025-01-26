@@ -20,3 +20,12 @@ getImages:
         - httpApi:
               path: /images
               method: get
+processImage:
+    handler: src/functions/processImage.handler
+    event:
+        - s3:
+              bucket: ${self:custom.s3ImagesBucket}
+              event: s3:ObjectCreated:Put
+              rules:
+                  - prefix: uploads/
+              existing: true # the bucket already exists
