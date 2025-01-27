@@ -21,3 +21,48 @@ ImagesBucket:
                   ExposedHeaders:
                       - ETag
                   MaxAge: 3000
+ImagesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+        TableName: ImagesTable
+        AttributeDefinitions:
+            - AttributeName: imageId
+              AttributeType: S
+            - AttributeName: uploadedAt
+              AttributeType: S
+            - AttributeName: userId
+              AttributeType: S
+        KeySchema: # allows image search for last uploaded
+            - AttributeName: imageId
+              KeyType: HASH
+            - AttributeName: uploadedAt
+              KeyType: RANGE
+        GlobalSecondaryIndexes:
+            - IndexName: userId-imageId-index # allows image search by user
+              KeySchema:
+                  - AttributeName: userId
+                    KeyType: HASH
+                  - AttributeName: imageId
+                    KeyType: RANGE
+              Projection:
+                  ProjectionType: ALL
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+LabelsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+        TableName: LabelsTable # allows image search by label
+        AttributeDefinitions:
+            - AttributeName: label
+              AttributeType: S
+            - AttributeName: imageId
+              AttributeType: S
+        KeySchema:
+            - AttributeName: label
+              KeyType: HASH
+            - AttributeName: imageId
+              KeyType: RANGE
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1

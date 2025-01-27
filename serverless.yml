@@ -14,6 +14,7 @@ provider:
         SERVERLESS_AWS_REGION:
             Ref: AWS::Region
         CLIENT_URL: ${env:CLIENT_URL}
+        IMAGES_BUCKET_NAME: ${self:custom.s3ImagesBucket}
 
 package:
     individually: true
