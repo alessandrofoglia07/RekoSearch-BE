@@ -16,6 +16,10 @@ provider:
         CLIENT_URL: ${env:CLIENT_URL}
         IMAGES_BUCKET_NAME: ${self:custom.s3ImagesBucket}
         REKOGNITION_COLLECTION_ID: ${self:custom.rekognitionCollectionId}
+        IMAGES_TABLE_NAME:
+            Ref: ImagesTable
+        LABELS_TABLE_NAME:
+            Ref: LabelsTable
 
 package:
     individually: true

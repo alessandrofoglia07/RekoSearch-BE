@@ -5,6 +5,8 @@ declare global {
             readonly CLIENT_URL: string;
             readonly IMAGES_BUCKET_NAME: string;
             readonly REKOGNITION_COLLECTION_ID: string;
+            readonly IMAGES_TABLE_NAME: string;
+            readonly LABELS_TABLE_NAME: string;
         }
     }
 }

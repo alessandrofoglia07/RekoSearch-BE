@@ -2,9 +2,13 @@ interface ImageMetadata {
     imageId: string;
     userId: string;
     uploadedAt: string;
+    authorUsername: string;
     imageTitle: string;
     imageDescription: string;
-    fileUrl: string;
+    rekognitionId?: string;
+    rekognitionLabels?: string[];
+    fileUrl?: string;
+    ttl?: number;
 }
 
 interface LabelData {
