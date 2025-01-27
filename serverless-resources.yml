@@ -66,3 +66,7 @@ LabelsTable:
         ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
+RekognitionCollection:
+    Type: AWS::Rekognition::Collection # allows image search by similar
+    Properties:
+        CollectionId: ${self:custom.rekognitionCollectionId}

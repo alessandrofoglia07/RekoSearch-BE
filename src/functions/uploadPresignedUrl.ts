@@ -23,6 +23,7 @@ export const handler: Handler = async (event) => {
             ContentType: fileType
         });
 
+        // Generate a pre-signed URL for the S3 PUT operation (5 minutes)
         const url = await getSignedUrl(s3, command, { expiresIn: 300 });
 
         return {

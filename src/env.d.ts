@@ -4,6 +4,7 @@ declare global {
             readonly SERVERLESS_AWS_REGION: string;
             readonly CLIENT_URL: string;
             readonly IMAGES_BUCKET_NAME: string;
+            readonly REKOGNITION_COLLECTION_ID: string;
         }
     }
 }

@@ -15,6 +15,7 @@ provider:
             Ref: AWS::Region
         CLIENT_URL: ${env:CLIENT_URL}
         IMAGES_BUCKET_NAME: ${self:custom.s3ImagesBucket}
+        REKOGNITION_COLLECTION_ID: ${self:custom.rekognitionCollectionId}
 
 package:
     individually: true
@@ -32,3 +33,4 @@ plugins:
 custom:
     dynamodbTableUrl: "arn:aws:dynamodb:${opt:region, self:provider.region}:${aws:accountId, '*'}:table"
     s3ImagesBucket: rekosearch-images-${sls:stage}
+    rekognitionCollectionId: rekosearch-images-collection-${sls:stage}
