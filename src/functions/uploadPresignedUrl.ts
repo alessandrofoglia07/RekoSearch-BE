@@ -34,8 +34,8 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             imageTitle,
             imageDescription,
             imageId,
-            uploadedAt: new Date().toISOString(),
-            ttl: Math.floor(Date.now() / 1000) + 300
+            uploadedAt: Math.floor(Date.now() / 1000), // Unix timestamp in seconds
+            ttl: Math.floor(Date.now() / 1000) + 300 // 5 minutes from now
         };
 
         // Save the image metadata to DynamoDB (with 5 minutes TTL)

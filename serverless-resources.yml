@@ -29,7 +29,7 @@ ImagesTable:
             - AttributeName: imageId
               AttributeType: S
             - AttributeName: uploadedAt
-              AttributeType: S
+              AttributeType: N
             - AttributeName: userId
               AttributeType: S
         KeySchema: # allows image search for last uploaded

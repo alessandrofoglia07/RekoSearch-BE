@@ -1,6 +1,6 @@
 import { Handler, S3CreateEvent } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand, UpdateCommand, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, UpdateCommand, BatchWriteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DetectLabelsCommand, IndexFacesCommand, RekognitionClient } from '@aws-sdk/client-rekognition';
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
@@ -20,13 +20,19 @@ export const handler: Handler = async (event: S3CreateEvent) => {
         }
 
         // Retrieve metadata from DynamoDB
-        const { Item: metadata } = await docClient.send(new GetCommand({
+        const { Items } = await docClient.send(new QueryCommand({
             TableName: process.env.IMAGES_TABLE_NAME,
-            Key: { imageId },
+            KeyConditionExpression: "imageId = :imageId",
+            FilterExpression: "attribute_not_exists(#ttl) OR #ttl > :now",
+            ExpressionAttributeValues: { ":imageId": imageId, ":now": Math.floor(Date.now() / 1000) },
+            ScanIndexForward: false,
+            Limit: 1,
         }));
-        if (!metadata) {
+        if (!Items || Items.length === 0) {
             return console.error("Metadata not found");
         }
+        const uploadedAt = Items[0]!.uploadedAt;
+
         console.log("Metadata found, processing image...");
 
         // Detect labels with Rekognition
@@ -58,7 +64,7 @@ export const handler: Handler = async (event: S3CreateEvent) => {
         // Update metadata in DynamoDB (add fileUrl, RekognitionId and labels, remove TTL)
         await docClient.send(new UpdateCommand({
             TableName: process.env.IMAGES_TABLE_NAME,
-            Key: { imageId },
+            Key: { imageId, uploadedAt },
             UpdateExpression: "REMOVE #ttl SET fileUrl = :fileUrl, rekognitionId = :rekognitionId, labels = :labels",
             ExpressionAttributeNames: { "#ttl": "ttl" },
             ExpressionAttributeValues: {

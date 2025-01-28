@@ -1,7 +1,7 @@
 interface ImageMetadata {
     imageId: string;
     userId: string;
-    uploadedAt: string;
+    uploadedAt: number;
     authorUsername: string;
     imageTitle: string;
     imageDescription: string;
