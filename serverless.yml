@@ -1,4 +1,4 @@
-service: QuillStream-serverless
+service: Rekosearch-serverless
 frameworkVersion: '4'
 
 provider:
@@ -10,6 +10,13 @@ provider:
             allowedOrigins:
                 - ${env:CLIENT_URL}
             allowCredentials: true
+        authorizers:
+            jwtCognitoAuthorizer:
+                type: jwt
+                identitySource: $request.header.Authorization
+                issuerUrl:
+                    Fn::Sub: 'https://cognito-idp.${aws:region}.amazonaws.com/${env:COGNITO_USER_POOL}'
+                audience: ${env:COGNITO_USER_POOL_CLIENT}
     environment:
         SERVERLESS_AWS_REGION:
             Ref: AWS::Region
@@ -35,6 +42,5 @@ plugins:
     - serverless-iam-roles-per-function
 
 custom:
-    dynamodbTableUrl: "arn:aws:dynamodb:${opt:region, self:provider.region}:${aws:accountId, '*'}:table"
     s3ImagesBucket: rekosearch-images-${sls:stage}
     rekognitionCollectionId: rekosearch-images-collection-${sls:stage}
