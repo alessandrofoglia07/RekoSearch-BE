@@ -9,9 +9,9 @@ const rekognition = new RekognitionClient({ region: process.env.SERVERLESS_AWS_R
 
 export const handler: Handler = async (event: S3CreateEvent) => {
     try {
-        const record = event.Records[0];
-        const bucket = record!.s3.bucket.name;
-        const fileKey = record!.s3.object.key;
+        const record = event.Records[0]!;
+        const bucket = record.s3.bucket.name;
+        const fileKey = record.s3.object.key;
 
         // Extract imageId from fileKey
         const imageId = fileKey.split("/")[1];

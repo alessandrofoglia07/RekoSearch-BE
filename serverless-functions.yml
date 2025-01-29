@@ -1,14 +1,25 @@
 uploadPresignedUrl:
     handler: src/functions/uploadPresignedUrl.handler
-    event:
+    events:
         - httpApi:
               path: /upload-url
               method: post
               authorizer:
                   name: jwtCognitoAuthorizer
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:PutItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - s3:PutObject
+          Resource:
+              Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
 deleteImage:
     handler: src/functions/deleteImage.handler
-    event:
+    events:
         - httpApi:
               path: /image
               method: delete
@@ -16,16 +27,34 @@ deleteImage:
                   name: jwtCognitoAuthorizer
 getImages:
     handler: src/functions/getImages.handler
-    event:
+    events:
         - httpApi:
               path: /images
               method: get
 processImage:
     handler: src/functions/processImage.handler
-    event:
+    events:
         - s3:
               bucket: ${self:custom.s3ImagesBucket}
               event: s3:ObjectCreated:Put
               rules:
                   - prefix: uploads/
-              existing: true # the bucket already exists
+              existing: true
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:BatchWriteItem
+          Resource:
+              Fn::GetAtt: [LabelsTable, Arn]
+        - Effect: Allow
+          Action:
+              - rekognition:DetectLabels
+              - rekognition:IndexFaces
+          Resource:
+              Fn::Sub: 'arn:aws:rekognition:${aws:region}:${aws:accountId}:collection/${self:custom.rekognitionCollectionId}'
