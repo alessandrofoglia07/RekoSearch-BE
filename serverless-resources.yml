@@ -24,7 +24,7 @@ ImagesBucket:
 ImagesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-        TableName: ImagesTable
+        TableName: Rekosearch-ImagesTable
         AttributeDefinitions:
             - AttributeName: imageId
               AttributeType: S
@@ -46,6 +46,9 @@ ImagesTable:
                     KeyType: RANGE
               Projection:
                   ProjectionType: ALL
+              ProvisionedThroughput:
+                  ReadCapacityUnits: 1
+                  WriteCapacityUnits: 1
         ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
@@ -55,7 +58,7 @@ ImagesTable:
 LabelsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-        TableName: LabelsTable # allows image search by label
+        TableName: Rekosearch-LabelsTable # allows image search by label
         AttributeDefinitions:
             - AttributeName: label
               AttributeType: S
