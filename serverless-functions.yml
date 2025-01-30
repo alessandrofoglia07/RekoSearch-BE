@@ -17,20 +17,6 @@ uploadPresignedUrl:
               - s3:PutObject
           Resource:
               Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
-deleteImage:
-    handler: src/functions/deleteImage.handler
-    events:
-        - httpApi:
-              path: /image
-              method: delete
-              authorizer:
-                  name: jwtCognitoAuthorizer
-getImages:
-    handler: src/functions/getImages.handler
-    events:
-        - httpApi:
-              path: /images
-              method: get
 processImage:
     handler: src/functions/processImage.handler
     events:
@@ -58,3 +44,35 @@ processImage:
               - rekognition:IndexFaces
           Resource:
               Fn::Sub: 'arn:aws:rekognition:${aws:region}:${aws:accountId}:collection/${self:custom.rekognitionCollectionId}'
+getImagesCategory:
+    handler: src/functions/getImagesCategory.handler
+    events:
+        - httpApi:
+              path: /images/category/{category}
+              method: get
+getImagesUser:
+    handler: src/functions/getImagesUser.handler
+    events:
+        - httpApi:
+              path: /images/user/{username}
+              method: get
+getImagesLabel:
+    handler: src/functions/getImagesLabel.handler
+    events:
+        - httpApi:
+              path: /images/label/{label}
+              method: get
+getImage:
+    handler: src/functions/getImage.handler
+    events:
+        - httpApi:
+              path: /image/{id}
+              method: get
+deleteImage:
+    handler: src/functions/deleteImage.handler
+    events:
+        - httpApi:
+              path: /image/{id}
+              method: delete
+              authorizer:
+                  name: jwtCognitoAuthorizer
