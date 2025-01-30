@@ -32,13 +32,19 @@ ImagesTable:
               AttributeType: N
             - AttributeName: userId
               AttributeType: S
-        KeySchema: # allows image search for last uploaded
-            - AttributeName: imageId
+            - AttributeName: category
+              AttributeType: S
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+        TimeToLiveSpecification:
+            AttributeName: ttl # UNIX timestamp
+            Enabled: true
+        KeySchema:
+            - AttributeName: imageId # Primary Key (unique identifier)
               KeyType: HASH
-            - AttributeName: uploadedAt
-              KeyType: RANGE
         GlobalSecondaryIndexes:
-            - IndexName: userId-imageId-index # allows image search by user
+            - IndexName: userId-imageId-index # Fetch user's recent images
               KeySchema:
                   - AttributeName: userId
                     KeyType: HASH
@@ -49,12 +55,14 @@ ImagesTable:
               ProvisionedThroughput:
                   ReadCapacityUnits: 1
                   WriteCapacityUnits: 1
-        ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
-        TimeToLiveSpecification:
-            AttributeName: ttl # UNIX timestamp
-            Enabled: true
+            - IndexName: category-uploadedAt-index # General image browsing
+              KeySchema:
+                  - AttributeName: category
+                    KeyType: HASH
+                  - AttributeName: uploadedAt
+                    KeyType: RANGE
+              Projection:
+                  ProjectionType: ALL
 LabelsTable:
     Type: AWS::DynamoDB::Table
     Properties:
