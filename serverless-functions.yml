@@ -68,6 +68,12 @@ getImage:
         - httpApi:
               path: /image/{id}
               method: get
+likeImage:
+    handler: src/functions/likeImage.handler
+    events:
+        - httpApi:
+              path: /image/{id}/like
+              method: post
 deleteImage:
     handler: src/functions/deleteImage.handler
     events:
@@ -76,3 +82,5 @@ deleteImage:
               method: delete
               authorizer:
                   name: jwtCognitoAuthorizer
+updateTrendingImages: # Called periodically to set the trending category to images (AWS EventBridge Schedule)
+    handler: src/functions/updateTrendingImages.handler
