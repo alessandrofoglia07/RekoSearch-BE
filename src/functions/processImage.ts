@@ -2,6 +2,7 @@ import { Handler, S3CreateEvent } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, UpdateCommand, BatchWriteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DetectLabelsCommand, IndexFacesCommand, RekognitionClient } from '@aws-sdk/client-rekognition';
+import { CATEGORY_MAPPING } from "../utils/categoryMapping";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(ddb);
@@ -46,7 +47,9 @@ export const handler: Handler = async (event: S3CreateEvent) => {
             MaxLabels: 10,
             MinConfidence: 75
         }));
-        const labels = labelsRes.Labels?.map(label => label.Name) || [];
+        const labels = labelsRes.Labels?.map(label => label.Name || 'Default') || [];
+
+        const assignedCategory = labels.map(label => CATEGORY_MAPPING[label] || "Uncategorized").find(Boolean) || "Uncategorized";
 
         // Index in Rekognition collection (to later search for similar faces)
         const faceIndexRes = await rekognition.send(new IndexFacesCommand({
@@ -65,12 +68,13 @@ export const handler: Handler = async (event: S3CreateEvent) => {
         await docClient.send(new UpdateCommand({
             TableName: process.env.IMAGES_TABLE_NAME,
             Key: { imageId, uploadedAt },
-            UpdateExpression: "REMOVE #ttl SET fileUrl = :fileUrl, rekognitionId = :rekognitionId, labels = :labels",
+            UpdateExpression: "REMOVE #ttl SET fileUrl = :fileUrl, rekognitionId = :rekognitionId, labels = :labels, category = :category",
             ExpressionAttributeNames: { "#ttl": "ttl" },
             ExpressionAttributeValues: {
                 ":fileUrl": `https://${bucket}.s3.amazonaws.com/${fileKey}`,
                 ":rekognitionId": rekognitionId,
                 ":labels": labels,
+                ":category": assignedCategory,
             },
         }));
 
