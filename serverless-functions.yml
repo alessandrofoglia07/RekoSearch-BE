@@ -50,6 +50,12 @@ getImagesCategory:
         - httpApi:
               path: /images/category/{category}
               method: get
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
 getImagesUser:
     handler: src/functions/getImagesUser.handler
     events:
