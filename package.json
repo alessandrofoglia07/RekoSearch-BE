@@ -14,6 +14,7 @@
     "author": "alessandrofoglia07",
     "license": "MIT",
     "devDependencies": {
+        "@aws-sdk/client-cognito-identity-provider": "^3.738.0",
         "@aws-sdk/client-dynamodb": "^3.712.0",
         "@aws-sdk/client-rekognition": "^3.734.0",
         "@aws-sdk/client-s3": "^3.735.0",

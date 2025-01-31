@@ -62,6 +62,17 @@ getImagesUser:
         - httpApi:
               path: /images/user/{username}
               method: get
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - cognito-idp:AdminGetUser
+          Resource:
+              Fn::Sub: 'arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/${env:COGNITO_USER_POOL}'
 getImagesLabel:
     handler: src/functions/getImagesLabel.handler
     events:
