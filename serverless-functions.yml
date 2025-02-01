@@ -79,6 +79,17 @@ getImagesLabel:
         - httpApi:
               path: /images/label/{label}
               method: get
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+          Resource:
+              Fn::GetAtt: [LabelsTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
 getImage:
     handler: src/functions/getImage.handler
     events:
