@@ -110,5 +110,17 @@ deleteImage:
               method: delete
               authorizer:
                   name: jwtCognitoAuthorizer
-updateTrendingImages: # Called periodically to set the trending category to images (AWS EventBridge Schedule)
+updateTrendingImages:
     handler: src/functions/updateTrendingImages.handler
+    # Uncomment the 'events' property to make the function be periodically executed
+    # events:
+    # - eventBridge:
+    #       schedule: rate(1 day)
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
