@@ -63,6 +63,9 @@ ImagesTable:
                     KeyType: RANGE
               Projection:
                   ProjectionType: ALL
+              ProvisionedThroughput:
+                  ReadCapacityUnits: 1
+                  WriteCapacityUnits: 1
 LabelsTable:
     Type: AWS::DynamoDB::Table
     Properties:
