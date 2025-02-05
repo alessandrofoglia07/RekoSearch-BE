@@ -96,6 +96,12 @@ getImage:
         - httpApi:
               path: /image/{id}
               method: get
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
 likeImage:
     handler: src/functions/likeImage.handler
     events:
