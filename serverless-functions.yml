@@ -108,6 +108,13 @@ likeImage:
         - httpApi:
               path: /image/{id}/like
               method: post
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
 deleteImage:
     handler: src/functions/deleteImage.handler
     events:
