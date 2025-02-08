@@ -1,11 +1,12 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { CATEGORY_MAPPING } from "../utils/categoryMapping";
+import { Handler } from "aws-lambda";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 
-export const handler = async () => {
+export const handler: Handler = async () => {
     try {
         // Retrieve current trending images
         const { Items: previousTrendingImages } = await ddbDocClient.send(new QueryCommand({

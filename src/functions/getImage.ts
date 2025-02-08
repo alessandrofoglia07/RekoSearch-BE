@@ -1,10 +1,11 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { Handler } from "aws-lambda";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 
-export const handler = async (event) => {
+export const handler: Handler = async (event) => {
     try {
         const { id } = event.pathParameters;
 
