@@ -123,6 +123,29 @@ deleteImage:
               method: delete
               authorizer:
                   name: jwtCognitoAuthorizer
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+              - dynamodb:DeleteItem
+          Resource:
+              Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:DeleteItem
+          Resource:
+              Fn::GetAtt: [LabelsTable, Arn]
+        - Effect: Allow
+          Action:
+              - s3:DeleteObject
+          Resource:
+              Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
+        - Effect: Allow
+          Action:
+              - rekognition:DeleteFaces
+          Resource:
+              Fn::Sub: 'arn:aws:rekognition:${aws:region}:${aws:accountId}:collection/${self:custom.rekognitionCollectionId}'
+
 updateTrendingImages:
     handler: src/functions/updateTrendingImages.handler
     # Uncomment the 'events' property to make the function be periodically executed
