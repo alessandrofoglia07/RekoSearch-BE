@@ -2,16 +2,16 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DeleteFacesCommand, RekognitionClient } from "@aws-sdk/client-rekognition";
 import { S3Client, DeleteObjectCommand, waitUntilObjectNotExists } from "@aws-sdk/client-s3";
 import { DeleteCommand, DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
-import { Handler } from "aws-lambda";
+import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 const s3 = new S3Client({ region: process.env.SERVERLESS_AWS_REGION });
 const rekognition = new RekognitionClient({ region: process.env.SERVERLESS_AWS_REGION });
 
-export const handler: Handler = async (event) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     try {
-        const { id } = event.pathParameters;
+        const { id } = event.pathParameters ?? {};
         const { sub: userId } = event.requestContext.authorizer!.jwt.claims;
 
         // Get image metadata from DynamoDB
@@ -28,13 +28,13 @@ export const handler: Handler = async (event) => {
         }
 
         const { userId: owner } = image as ImageMetadata;
-        const fileKey = (image as ImageMetadata).fileUrl?.split('/').pop();
         if (userId !== owner) {
             return {
                 statusCode: 403,
                 body: JSON.stringify({ message: "Forbidden" }),
             };
         }
+        const fileKey = (image as ImageMetadata).fileUrl?.split('/').pop();
 
         // Delete image file from S3
         await s3.send(new DeleteObjectCommand({

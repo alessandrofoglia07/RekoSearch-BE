@@ -1,4 +1,4 @@
-import { Handler } from "aws-lambda";
+import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
@@ -7,9 +7,9 @@ const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 const cognito = new CognitoIdentityProviderClient({ region: process.env.SERVERLESS_AWS_REGION });
 
-export const handler: Handler = async (event) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     try {
-        const { username } = event.pathParameters;
+        const { username } = event.pathParameters ?? {};
         if (!username) {
             return {
                 statusCode: 400,

@@ -1,4 +1,4 @@
-import { Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { LABELS } from '../utils/categoryMapping';
@@ -6,9 +6,9 @@ import { LABELS } from '../utils/categoryMapping';
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 
-export const handler: Handler = async (event) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     try {
-        const { label } = event.pathParameters;
+        const { label } = event.pathParameters ?? {};
 
         if (!label) {
             return {
