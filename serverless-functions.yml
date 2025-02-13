@@ -55,7 +55,11 @@ getImagesCategory:
           Action:
               - dynamodb:Query
           Resource:
-              Fn::GetAtt: [ImagesTable, Arn]
+              Fn::Join:
+                  - '/'
+                  - - Fn::GetAtt: [ImagesTable, Arn]
+                    - index
+                    - category-uploadedAt-index
 getImagesUser:
     handler: src/functions/getImagesUser.handler
     events:
@@ -67,7 +71,11 @@ getImagesUser:
           Action:
               - dynamodb:Query
           Resource:
-              Fn::GetAtt: [ImagesTable, Arn]
+              Fn::Join:
+                  - '/'
+                  - - Fn::GetAtt: [ImagesTable, Arn]
+                    - index
+                    - userId-imageId-index
         - Effect: Allow
           Action:
               - cognito-idp:AdminGetUser
