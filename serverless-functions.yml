@@ -160,8 +160,16 @@ updateTrendingImages:
     iamRoleStatements:
         - Effect: Allow
           Action:
-              - dynamodb:Query
               - dynamodb:Scan
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:Query
+          Resource:
+              Fn::Join:
+                  - '/'
+                  - - Fn::GetAtt: [ImagesTable, Arn]
+                    - index
+                    - category-uploadedAt-index
