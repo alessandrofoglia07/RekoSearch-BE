@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { shortResponse, completeResponse } from "../utils/responseTemplates";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
@@ -9,6 +10,8 @@ const cognito = new CognitoIdentityProviderClient({ region: process.env.SERVERLE
 
 export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     try {
+        const responseTemplate = event.queryStringParameters?.short === "true" ? shortResponse : completeResponse;
+
         const { username } = event.pathParameters ?? {};
         if (!username) {
             return {
@@ -35,7 +38,8 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             KeyConditionExpression: 'userId = :userId',
             ExpressionAttributeValues: {
                 ':userId': sub
-            }
+            },
+            ProjectionExpression: responseTemplate,
         }));
 
         return {

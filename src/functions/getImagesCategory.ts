@@ -1,12 +1,15 @@
 import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { completeResponse, shortResponse } from "../utils/responseTemplates";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
 
 export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     try {
+        const responseTemplate = event.queryStringParameters?.short === "true" ? shortResponse : completeResponse;
+
         const { category } = event.pathParameters ?? {};
         if (!category) {
             return {
@@ -22,7 +25,8 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             ExpressionAttributeValues: {
                 ":category": category
             },
-            ScanIndexForward: false
+            ScanIndexForward: false,
+            ProjectionExpression: responseTemplate
         }));
 
         return {

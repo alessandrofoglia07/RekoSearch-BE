@@ -10,7 +10,7 @@ interface ImageMetadata {
     likes: string[]; // userIds
     labels: string[];
     rekognitionId?: string;
-    rekognitionLabels?: string[];
+    labels?: string[];
     fileUrl?: string;
     ttl?: number;
 }
