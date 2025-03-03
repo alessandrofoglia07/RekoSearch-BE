@@ -1,7 +1,6 @@
 import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
-import { LABELS } from '../utils/categoryMapping';
 import { shortResponse, completeResponse } from '../utils/responseTemplates';
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
@@ -17,13 +16,6 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ message: 'Missing label' })
-            };
-        }
-
-        if (!LABELS.includes(label)) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify([])
             };
         }
 

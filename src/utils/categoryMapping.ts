@@ -112,5 +112,4 @@ export const CATEGORY_MAPPING: Record<string, string> = {
     "Default": "Uncategorized"
 };
 
-export const LABELS = Object.keys(CATEGORY_MAPPING);
 export const CATEGORIES = Object.values(CATEGORY_MAPPING).filter((category, index, self) => self.indexOf(category) === index);
