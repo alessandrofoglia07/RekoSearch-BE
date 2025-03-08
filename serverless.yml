@@ -27,6 +27,8 @@ provider:
             Ref: ImagesTable
         LABELS_TABLE_NAME:
             Ref: LabelsTable
+        USERS_TABLE_NAME:
+            Ref: UsersTable
 
 package:
     individually: true

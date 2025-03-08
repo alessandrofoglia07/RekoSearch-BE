@@ -83,6 +83,19 @@ LabelsTable:
         ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
+UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+        TableName: Rekosearch-UsersTable # users' metadata
+        AttributeDefinitions:
+            - AttributeName: userId
+              AttributeType: S
+        KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
 RekognitionCollection:
     Type: AWS::Rekognition::Collection # allows image search by similar
     Properties:

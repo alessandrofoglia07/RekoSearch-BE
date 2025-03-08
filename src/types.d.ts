@@ -19,3 +19,11 @@ interface LabelData {
     label: string;
     imageId: string;
 }
+
+interface UserData {
+    userId: string;
+    username: string;
+    views: number;
+    likes: number;
+    uploadedImages: number;
+}
