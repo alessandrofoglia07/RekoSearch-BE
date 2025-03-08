@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 import { completeResponse, shortResponse } from "../utils/responseTemplates";
 
@@ -12,11 +12,25 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
 
         const { id } = event.pathParameters ?? {};
 
-        const { Item } = await ddbDocClient.send(new GetCommand({
+        // Update the views count
+        const { Attributes } = await ddbDocClient.send(new UpdateCommand({
             TableName: process.env.IMAGES_TABLE_NAME,
             Key: { id },
-            ProjectionExpression: responseTemplate,
+            UpdateExpression: "SET views = views + :inc",
+            ExpressionAttributeValues: { ":inc": { N: "1" } },
+            ReturnValues: "ALL_NEW",
         }));
+
+        const Item = responseTemplate === shortResponse ? {
+            id: Attributes?.id,
+            fileUrl: Attributes?.fileUrl,
+            imageTitle: Attributes?.imageTitle,
+            category: Attributes?.category,
+            labels: Attributes?.labels,
+            views: Attributes?.views,
+            likes: Attributes?.likes,
+            authorUsername: Attributes?.authorUsername,
+        } : Attributes;
 
         return {
             statusCode: 200,
