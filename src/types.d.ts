@@ -23,7 +23,13 @@ interface LabelData {
 interface UserData {
     userId: string;
     username: string;
+    email: string;
+    profileImageUrl: string;
+    bio: string;
+    followers: string[]; // userIds
+    following: string[]; // userIds
+    likedImages: string[]; // imageIds
+    uploadedImages: number;
     views: number;
     likes: number;
-    uploadedImages: number;
 }
