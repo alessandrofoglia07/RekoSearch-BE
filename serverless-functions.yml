@@ -1,12 +1,12 @@
 processUserSignUp:
-    handler: src/functions/processUserSignUp.handler
+    handler: src/functions/userManagement/processUserSignUp.handler
     events:
         - cognitoUserPool:
               pool: ${env:COGNITO_USER_POOL_NAME}
               trigger: PreSignUp
               existing: true
 uploadPresignedUrl:
-    handler: src/functions/uploadPresignedUrl.handler
+    handler: src/functions/imageProcessing/uploadPresignedUrl.handler
     events:
         - httpApi:
               path: /upload-url
@@ -25,7 +25,7 @@ uploadPresignedUrl:
           Resource:
               Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
 processImage:
-    handler: src/functions/processImage.handler
+    handler: src/functions/imageProcessing/processImage.handler
     events:
         - s3:
               bucket: ${self:custom.s3ImagesBucket}
@@ -52,7 +52,7 @@ processImage:
           Resource:
               Fn::Sub: 'arn:aws:rekognition:${aws:region}:${aws:accountId}:collection/${self:custom.rekognitionCollectionId}'
 getImagesCategory:
-    handler: src/functions/getImagesCategory.handler
+    handler: src/functions/imageProcessing/getImagesCategory.handler
     events:
         - httpApi:
               path: /images/category/{category}
@@ -68,7 +68,7 @@ getImagesCategory:
                     - index
                     - category-uploadedAt-index
 getImagesUser:
-    handler: src/functions/getImagesUser.handler
+    handler: src/functions/imageProcessing/getImagesUser.handler
     events:
         - httpApi:
               path: /images/user/{username}
@@ -89,7 +89,7 @@ getImagesUser:
           Resource:
               Fn::Sub: 'arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/${env:COGNITO_USER_POOL}'
 getImagesLabel:
-    handler: src/functions/getImagesLabel.handler
+    handler: src/functions/imageProcessing/getImagesLabel.handler
     events:
         - httpApi:
               path: /images/label/{label}
@@ -106,7 +106,7 @@ getImagesLabel:
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
 getImage:
-    handler: src/functions/getImage.handler
+    handler: src/functions/imageProcessing/getImage.handler
     events:
         - httpApi:
               path: /image/{id}
@@ -118,7 +118,7 @@ getImage:
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
 likeImage:
-    handler: src/functions/likeImage.handler
+    handler: src/functions/imageProcessing/likeImage.handler
     events:
         - httpApi:
               path: /image/{id}/like
@@ -131,7 +131,7 @@ likeImage:
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
 deleteImage:
-    handler: src/functions/deleteImage.handler
+    handler: src/functions/imageProcessing/deleteImage.handler
     events:
         - httpApi:
               path: /image/{id}
@@ -159,7 +159,7 @@ deleteImage:
               Fn::Sub: 'arn:aws:rekognition:${aws:region}:${aws:accountId}:collection/${self:custom.rekognitionCollectionId}'
 
 updateTrendingImages:
-    handler: src/functions/updateTrendingImages.handler
+    handler: src/functions/imageProcessing/updateTrendingImages.handler
     # Uncomment the 'events' property to make the function be periodically executed
     # events:
     # - eventBridge:

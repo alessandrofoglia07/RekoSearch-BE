@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { CATEGORY_MAPPING } from "../utils/categoryMapping";
+import { CATEGORY_MAPPING } from "../../utils/categoryMapping";
 import { Handler } from "aws-lambda";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });

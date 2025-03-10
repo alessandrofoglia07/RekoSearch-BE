@@ -2,7 +2,7 @@ import { Handler, S3CreateEvent } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, UpdateCommand, BatchWriteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DetectLabelsCommand, IndexFacesCommand, RekognitionClient } from '@aws-sdk/client-rekognition';
-import { CATEGORY_MAPPING } from "../utils/categoryMapping";
+import { CATEGORY_MAPPING } from "../../utils/categoryMapping";
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const docClient = DynamoDBDocumentClient.from(ddb);

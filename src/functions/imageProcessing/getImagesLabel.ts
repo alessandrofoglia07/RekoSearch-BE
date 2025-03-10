@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, QueryCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
-import { shortResponse, completeResponse } from '../utils/responseTemplates';
+import { shortResponse, completeResponse } from '../../utils/responseTemplates';
 
 const ddb = new DynamoDBClient({ region: process.env.SERVERLESS_AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddb);
