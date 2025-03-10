@@ -32,7 +32,7 @@ export const handler: Handler = async (event: S3CreateEvent) => {
         if (!Items || Items.length === 0) {
             return console.error("Metadata not found");
         }
-        const uploadedAt = Items[0]!.uploadedAt;
+        const { uploadedAt, userId } = Items[0]!;
 
         console.log("Metadata found, processing image...");
 
@@ -76,6 +76,17 @@ export const handler: Handler = async (event: S3CreateEvent) => {
                 ":labels": labels,
                 ":category": assignedCategory,
             },
+        }));
+
+        // Update user's uploadedImages in DynamoDB
+        await docClient.send(new UpdateCommand({
+            TableName: process.env.USERS_TABLE_NAME,
+            Key: { userId },
+            UpdateExpression: "SET uploadedImages = if_not_exists(uploadedImages, :zero) + :inc",
+            ExpressionAttributeValues: {
+                ":inc": 1,
+                ":zero": 0
+            }
         }));
 
         // Add label items to DynamoDB

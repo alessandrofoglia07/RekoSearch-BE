@@ -1,10 +1,34 @@
-processUserSignUp:
+processUserSignUp: # TODO: Add iamRoleStatements
     handler: src/functions/userManagement/processUserSignUp.handler
     events:
         - cognitoUserPool:
               pool: ${env:COGNITO_USER_POOL_NAME}
               trigger: PreSignUp
               existing: true
+followUser: # TODO: Implement this
+    handler: src/functions/userManagement/followUser.handler
+    events:
+        - httpApi:
+              path: /follow/{id}
+              method: patch
+              authorizer:
+                  name: jwtCognitoAuthorizer
+editBio: # TODO: Implement this
+    handler: src/functions/userManagement/editBio.handler
+    events:
+        - httpApi:
+              path: /account/edit/bio
+              method: patch
+              authorizer:
+                  name: jwtCognitoAuthorizer
+editProfilePicture: # TODO: Implement this
+    handler: src/functions/userManagement/editProfilePicture.handler
+    events:
+        - httpApi:
+              path: /account/edit/profile-pic
+              method: patch
+              authorizer:
+                  name: jwtCognitoAuthorizer
 uploadPresignedUrl:
     handler: src/functions/imageProcessing/uploadPresignedUrl.handler
     events:
@@ -24,7 +48,7 @@ uploadPresignedUrl:
               - s3:PutObject
           Resource:
               Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
-processImage:
+processImage: # TODO: Fix iamRoleStatements
     handler: src/functions/imageProcessing/processImage.handler
     events:
         - s3:
@@ -105,7 +129,7 @@ getImagesLabel:
               - dynamodb:GetItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
-getImage:
+getImage: # TODO: Fix iamRoleStatements
     handler: src/functions/imageProcessing/getImage.handler
     events:
         - httpApi:
@@ -117,7 +141,7 @@ getImage:
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
-likeImage:
+likeImage: # TODO: Fix iamRoleStatements
     handler: src/functions/imageProcessing/likeImage.handler
     events:
         - httpApi:

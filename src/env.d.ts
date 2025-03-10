@@ -7,6 +7,8 @@ declare global {
             readonly REKOGNITION_COLLECTION_ID: string;
             readonly IMAGES_TABLE_NAME: string;
             readonly LABELS_TABLE_NAME: string;
+            readonly USERS_TABLE_NAME: string;
+            readonly COGNITO_USER_POOL_NAME: string;
             readonly COGNITO_USER_POOL: string;
             readonly COGNITO_USER_POOL_CLIENT: string;
         }

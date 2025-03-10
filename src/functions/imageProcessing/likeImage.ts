@@ -36,6 +36,13 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             ExpressionAttributeValues: { ":likes": updatedLikes },
         }));
 
+        await ddbDocClient.send(new UpdateCommand({
+            TableName: process.env.USERS_TABLE_NAME,
+            Key: { id },
+            UpdateExpression: liked ? "SET likes = likes - :inc" : "SET likes = likes + :inc",
+            ExpressionAttributeValues: { ":inc": { N: "1" } }
+        }));
+
         return {
             statusCode: 200,
             body: JSON.stringify({ ...image, likes: updatedLikes }),

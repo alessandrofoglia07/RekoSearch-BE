@@ -21,6 +21,13 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
             ReturnValues: "ALL_NEW",
         }));
 
+        await ddbDocClient.send(new UpdateCommand({
+            TableName: process.env.USERS_TABLE_NAME,
+            Key: { id },
+            UpdateExpression: "SET views = views + :inc",
+            ExpressionAttributeValues: { ":inc": { N: "1" } }
+        }));
+
         const Item = responseTemplate === shortResponse ? {
             id: Attributes?.id,
             fileUrl: Attributes?.fileUrl,
