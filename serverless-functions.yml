@@ -1,10 +1,16 @@
-processUserSignUp: # TODO: Add iamRoleStatements
+processUserSignUp:
     handler: src/functions/userManagement/processUserSignUp.handler
     events:
         - cognitoUserPool:
               pool: ${env:COGNITO_USER_POOL_NAME}
               trigger: PreSignUp
               existing: true
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:PutItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
 followUser: # TODO: Implement this
     handler: src/functions/userManagement/followUser.handler
     events:
@@ -48,7 +54,7 @@ uploadPresignedUrl:
               - s3:PutObject
           Resource:
               Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
-processImage: # TODO: Fix iamRoleStatements
+processImage:
     handler: src/functions/imageProcessing/processImage.handler
     events:
         - s3:
@@ -69,6 +75,11 @@ processImage: # TODO: Fix iamRoleStatements
               - dynamodb:BatchWriteItem
           Resource:
               Fn::GetAtt: [LabelsTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
         - Effect: Allow
           Action:
               - rekognition:DetectLabels
@@ -129,7 +140,7 @@ getImagesLabel:
               - dynamodb:GetItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
-getImage: # TODO: Fix iamRoleStatements
+getImage:
     handler: src/functions/imageProcessing/getImage.handler
     events:
         - httpApi:
@@ -141,7 +152,12 @@ getImage: # TODO: Fix iamRoleStatements
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
-likeImage: # TODO: Fix iamRoleStatements
+        - Effect: Allow
+          Action:
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
+likeImage:
     handler: src/functions/imageProcessing/likeImage.handler
     events:
         - httpApi:
@@ -154,6 +170,11 @@ likeImage: # TODO: Fix iamRoleStatements
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [ImagesTable, Arn]
+        - Effect: Allow
+          Action:
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
 deleteImage:
     handler: src/functions/imageProcessing/deleteImage.handler
     events:
