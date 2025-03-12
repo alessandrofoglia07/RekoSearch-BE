@@ -11,7 +11,7 @@ processUserSignUp:
               - dynamodb:PutItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
-followUser: # TODO: Implement this
+followUser:
     handler: src/functions/userManagement/followUser.handler
     events:
         - httpApi:
@@ -19,6 +19,13 @@ followUser: # TODO: Implement this
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
 editBio: # TODO: Implement this
     handler: src/functions/userManagement/editBio.handler
     events:
