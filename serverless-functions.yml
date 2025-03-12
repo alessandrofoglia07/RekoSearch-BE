@@ -26,7 +26,7 @@ followUser:
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
-editBio: # TODO: Implement this
+editBio:
     handler: src/functions/userManagement/editBio.handler
     events:
         - httpApi:
@@ -34,6 +34,12 @@ editBio: # TODO: Implement this
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
 editProfilePicture: # TODO: Implement this
     handler: src/functions/userManagement/editProfilePicture.handler
     events:
