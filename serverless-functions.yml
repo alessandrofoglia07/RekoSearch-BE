@@ -40,11 +40,11 @@ editBio:
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
-editProfilePicture: # TODO: Implement this
+editProfilePicture: # TODO: Add iamRoleStatements
     handler: src/functions/userManagement/editProfilePicture.handler
     events:
         - httpApi:
-              path: /account/edit/profile-pic
+              path: /account/edit/profile-picture
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
