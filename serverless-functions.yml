@@ -48,6 +48,15 @@ editProfilePicture: # TODO: Add iamRoleStatements
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
+processNewProfilePicture: # TODO: Add iamRoleStatements
+    handler: src/functions/userManagement/processNewProfilePicture.handler
+    events:
+        - s3:
+              bucket: ${self:custom.s3ImagesBucket}
+              event: s3:ObjectCreated:Put
+              rules:
+                  - prefix: profile-pics/
+              existing: true
 uploadPresignedUrl:
     handler: src/functions/imageProcessing/uploadPresignedUrl.handler
     events:
