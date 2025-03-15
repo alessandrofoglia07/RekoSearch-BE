@@ -40,7 +40,7 @@ editBio:
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
-editProfilePicture: # TODO: Add iamRoleStatements
+editProfilePicture:
     handler: src/functions/userManagement/editProfilePicture.handler
     events:
         - httpApi:
@@ -48,7 +48,13 @@ editProfilePicture: # TODO: Add iamRoleStatements
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
-processNewProfilePicture: # TODO: Add iamRoleStatements
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - s3:PutObject
+          Resource:
+              Fn::Sub: 'arn:aws:s3:::${self:custom.s3ImagesBucket}/uploads/*'
+processNewProfilePicture:
     handler: src/functions/userManagement/processNewProfilePicture.handler
     events:
         - s3:
@@ -57,6 +63,12 @@ processNewProfilePicture: # TODO: Add iamRoleStatements
               rules:
                   - prefix: profile-pics/
               existing: true
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:UpdateItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
 uploadPresignedUrl:
     handler: src/functions/imageProcessing/uploadPresignedUrl.handler
     events:
