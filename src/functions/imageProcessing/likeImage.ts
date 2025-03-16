@@ -1,4 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { UpdateDatasetEntriesCommand } from "@aws-sdk/client-rekognition";
 import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent, Handler } from "aws-lambda";
 
@@ -38,10 +39,28 @@ export const handler: Handler = async (event: APIGatewayProxyEvent) => {
 
         await ddbDocClient.send(new UpdateCommand({
             TableName: process.env.USERS_TABLE_NAME,
-            Key: { id },
+            Key: { id: (image as ImageMetadata).userId },
             UpdateExpression: liked ? "SET likes = likes - :inc" : "SET likes = likes + :inc",
             ExpressionAttributeValues: { ":inc": { N: "1" } }
         }));
+
+        const { Item: user } = await ddbDocClient.send(new GetCommand({
+            TableName: process.env.USERS_TABLE_NAME,
+            Key: { id: userId }
+        }));
+
+        if (user) {
+            const newLikedImages = liked
+                ? user.likedImages.filter((imageId: string) => imageId !== id)
+                : [...user.likedImages, id];
+
+            await ddbDocClient.send(new UpdateCommand({
+                TableName: process.env.USERS_TABLE_NAME,
+                Key: { id: userId },
+                UpdateExpression: "SET likedImages = :likedImages",
+                ExpressionAttributeValues: { ":likedImages": newLikedImages }
+            }));
+        }
 
         return {
             statusCode: 200,

@@ -206,6 +206,7 @@ likeImage:
               Fn::GetAtt: [ImagesTable, Arn]
         - Effect: Allow
           Action:
+              - dynamodb:GetItem
               - dynamodb:UpdateItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
