@@ -24,7 +24,7 @@ interface UserData {
     userId: string;
     username: string;
     email: string;
-    profileImageUrl: string;
+    profilePictureUrl: string;
     bio: string;
     followers: string[]; // userIds
     following: string[]; // userIds

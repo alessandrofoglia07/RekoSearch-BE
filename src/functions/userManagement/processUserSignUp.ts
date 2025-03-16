@@ -18,7 +18,7 @@ export const handler: Handler = async (event: PreSignUpTriggerEvent) => {
             userId: sub,
             username,
             email,
-            profileImageUrl: "",
+            profilePictureUrl: "",
             bio: "",
             followers: [],
             following: [],

@@ -19,9 +19,9 @@ export const handler: Handler = async (event: S3CreateEvent) => {
         await ddbDocClient.send(new UpdateCommand({
             TableName: process.env.USERS_TABLE_NAME,
             Key: { userId: imageId.split("-")[1] },
-            UpdateExpression: "SET profilePicture = :profilePicture",
+            UpdateExpression: "SET profilePictureUrl = :profilePictureUrl",
             ExpressionAttributeValues: {
-                ":profilePicture": `https://${bucket}.s3.amazonaws.com/${fileKey}`
+                ":profilePictureUrl": `https://${bucket}.s3.amazonaws.com/${fileKey}`
             }
         }));
 
