@@ -11,11 +11,17 @@ processUserSignUp:
               - dynamodb:PutItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
+getUserData: # TODO: iamRoleStatements
+    handler: src/functions/userManagement/getUserData.handler
+    events:
+        - httpApi:
+              path: /user/{id_or_username}
+              method: get
 followUser:
     handler: src/functions/userManagement/followUser.handler
     events:
         - httpApi:
-              path: /follow/{id}
+              path: /user/{id_or_username}/follow
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
@@ -30,7 +36,7 @@ editBio:
     handler: src/functions/userManagement/editBio.handler
     events:
         - httpApi:
-              path: /account/edit/bio
+              path: /user/account/bio
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
@@ -44,7 +50,7 @@ editProfilePicture:
     handler: src/functions/userManagement/editProfilePicture.handler
     events:
         - httpApi:
-              path: /account/edit/profile-picture
+              path: /user/account/profile-picture
               method: patch
               authorizer:
                   name: jwtCognitoAuthorizer
