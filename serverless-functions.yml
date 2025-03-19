@@ -11,12 +11,23 @@ processUserSignUp:
               - dynamodb:PutItem
           Resource:
               Fn::GetAtt: [UsersTable, Arn]
-getUserData: # TODO: iamRoleStatements
+getUserData:
     handler: src/functions/userManagement/getUserData.handler
     events:
         - httpApi:
               path: /user/{id_or_username}
               method: get
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:GetItem
+          Resource:
+              Fn::GetAtt: [UsersTable, Arn]
+        - Effect: Allow
+          Action:
+              - cognito-idp:AdminGetUser
+          Resource:
+              Fn::Sub: 'arn:aws:cognito-idp:${aws:region}:${aws:accountId}:userpool/${env:COGNITO_USER_POOL}'
 followUser:
     handler: src/functions/userManagement/followUser.handler
     events:
